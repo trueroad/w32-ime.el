@@ -110,7 +110,7 @@ Even if IME state is not changed, these functiona are maybe called.")
 ;; Section: X selection
 ;;
 
-(defalias 'x-selection-exists-p 'w32-clipboard-data-exist-p)
+; (defalias 'x-selection-exists-p 'w32-clipboard-data-exist-p)
 
 ;;
 ;; Section: Font
@@ -196,21 +196,22 @@ Even if IME state is not changed, these functiona are maybe called.")
 ;; Section: Shell execute
 ;;
 
-(defun w32-shell-execute (operation document &optional parameters show-flag)
-  (if (and show-flag
-	  (not (numberp show-flag)))
-      (error "show-flag must be number or nil:%S" show-flag))
-  (let ((coding-system-for-write w32-system-coding-system)
-	(args (append
-	       (list document)
-	       (list "-b" operation)
-	       (list "-d" default-directory)
-	       (if parameters
-		   (list "-p" parameters))
-	       (if show-flag
-		   (list "-n" (number-to-string show-flag))))))
-    (apply 'call-process w32-fiber-program-name nil 0 nil
-	   args)))
+;; Comment out because NTemacs don't have fiber.exe.
+;; (defun w32-shell-execute (operation document &optional parameters show-flag)
+;;   (if (and show-flag
+;; 	  (not (numberp show-flag)))
+;;       (error "show-flag must be number or nil:%S" show-flag))
+;;   (let ((coding-system-for-write w32-system-coding-system)
+;; 	(args (append
+;; 	       (list document)
+;; 	       (list "-b" operation)
+;; 	       (list "-d" default-directory)
+;; 	       (if parameters
+;; 		   (list "-p" parameters))
+;; 	       (if show-flag
+;; 		   (list "-n" (number-to-string show-flag))))))
+;;     (apply 'call-process w32-fiber-program-name nil 0 nil
+;; 	   args)))
 
 ;;
 ;; Section: IME
