@@ -110,7 +110,7 @@ Even if IME state is not changed, these functiona are maybe called.")
 ;; Section: X selection
 ;;
 
-(defalias 'x-selection-exists-p 'w32-clipboard-data-exist-p)
+; (defalias 'x-selection-exists-p 'w32-clipboard-data-exist-p)
 
 ;;
 ;; Section: Font
