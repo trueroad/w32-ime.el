@@ -36,7 +36,7 @@ Even if IME state is not changed, these functiona are maybe called.")
 
 (setq search-highlight t)
 
-;; isearch ime keymap 
+;; isearch ime keymap
 
 (setq isearch-ime-keymap (copy-keymap minibuffer-local-map))
 (nconc isearch-ime-keymap (list (make-vector 26 'isearch-exit-win32ime)))
@@ -52,7 +52,7 @@ Even if IME state is not changed, these functiona are maybe called.")
 (define-key isearch-ime-keymap "\C-j" 'isearch-command-win32ime)
 (define-key isearch-ime-keymap "\t" 'isearch-command-win32ime)
 (define-key isearch-ime-keymap " " 'isearch-command-win32ime)
-    
+
 (define-key isearch-ime-keymap "\C-w" 'isearch-command-win32ime)
 (define-key isearch-ime-keymap "\C-y" 'isearch-command-win32ime)
 
@@ -73,9 +73,6 @@ Even if IME state is not changed, these functiona are maybe called.")
 ;;
 ;; Section: General definitions
 ;;
-
-(defvar w32-fiber-program-name "fiber.exe")
-(defvar w32-fiber-process-name "*fiber*")
 
 (defun wildcard-to-regexp (pattern)
   (let ((i 0)
@@ -163,7 +160,7 @@ Even if IME state is not changed, these functiona are maybe called.")
 	(setq size-x (string-to-number (match-string 1 str))
 	      size-y (string-to-number (match-string 2 str))
 	      str (substring str (match-end 0))))
-    (if (string-match 
+    (if (string-match
 	 (concat "^" location-regexp location-regexp)
 	 str)
 	(setq location-x (match-string 1 str)
@@ -191,27 +188,6 @@ Even if IME state is not changed, these functiona are maybe called.")
 		 (cons (cons 'bottom (cdr location-y))
 		       result))))
     result))
-
-;;
-;; Section: Shell execute
-;;
-
-;; Comment out because NTemacs don't have fiber.exe.
-;; (defun w32-shell-execute (operation document &optional parameters show-flag)
-;;   (if (and show-flag
-;; 	  (not (numberp show-flag)))
-;;       (error "show-flag must be number or nil:%S" show-flag))
-;;   (let ((coding-system-for-write w32-system-coding-system)
-;; 	(args (append
-;; 	       (list document)
-;; 	       (list "-b" operation)
-;; 	       (list "-d" default-directory)
-;; 	       (if parameters
-;; 		   (list "-p" parameters))
-;; 	       (if show-flag
-;; 		   (list "-n" (number-to-string show-flag))))))
-;;     (apply 'call-process w32-fiber-program-name nil 0 nil
-;; 	   args)))
 
 ;;
 ;; Section: IME
@@ -243,7 +219,7 @@ If SUFFIX is nil, \"-original\" is added. "
 	   (fset original-function
 		 (symbol-function function))
 	   (fset function
-		 (list 
+		 (list
 		  'lambda '(&rest arguments)
 		  (if interactive-p
 		      (list 'interactive interactive-arg))
@@ -316,7 +292,7 @@ If SUFFIX is nil, \"-original\" is added. "
 		nil
 ;		mode-line-win32ime-mode-in-minibuffer
 ;		transparent-mode-indicator
-;		minibuffer-preprompt 
+;		minibuffer-preprompt
 ;		nil
 		))))
 ;  (if (eq new (minibuffer-window))
@@ -355,7 +331,7 @@ If SUFFIX is nil, \"-original\" is added. "
 			      (cons 'mw32-ime-mode-line-state-indicator
 				    mode-line-format))))
 	(force-mode-line-update t))))
-	
+
 (defun mw32-ime-toggle ()
   (interactive)
   (let ((ime-state (fep-get-mode)))
