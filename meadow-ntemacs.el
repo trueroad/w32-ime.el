@@ -254,52 +254,6 @@ If SUFFIX is nil, \"-original\" is added. "
 
 ;; for IME management system.
 
-(defun mw32-ime-set-selected-window-buffer-hook (oldbuf newwin newbuf)
-  (save-excursion
-    (set-buffer newbuf)
-    (if mw32-ime-buffer-switch-p
-	(if (not (eq (fep-get-mode) mw32-ime-state))
-	    (cond
-	     (mw32-ime-state
-	      (fep-force-on nil)
-	      (run-hooks 'mw32-ime-on-hook))
-	     (t
-	      (if (= (w32-ime-undetermined-string-length) 0)
-		  (progn
-		    (fep-force-off nil)
-		    (run-hooks 'mw32-ime-off-hook)))))))))
-
-(defun mw32-ime-select-window-hook (old new)
-  (save-excursion
-    (set-buffer (window-buffer new))
-    (if mw32-ime-buffer-switch-p
-	(if (not (eq (fep-get-mode) mw32-ime-state))
-	    (cond
-	     (mw32-ime-state
-		(fep-force-on nil)
-		(run-hooks 'mw32-ime-on-hook))
-	     (t
-	      (if (= (w32-ime-undetermined-string-length) 0)
-		  (progn
-		    (fep-force-off nil)
-		    (run-hooks 'mw32-ime-off-hook)))))))
-    (if (and (eq old (minibuffer-window))
-	     (not (eq new (minibuffer-window))))
-	(progn
-	  (set-buffer (window-buffer (minibuffer-window)))
-;	(fep-force-off)
-	  (setq mw32-ime-state
-		nil
-;		mode-line-win32ime-mode-in-minibuffer
-;		transparent-mode-indicator
-;		minibuffer-preprompt
-;		nil
-		))))
-;  (if (eq new (minibuffer-window))
-;      (setq minibuffer-window-selected t)
-;    (setq minibuffer-window-selected nil))
-  )
-
 (defun mw32-ime-mode-line-update ()
   (cond (mw32-ime-show-mode-line
 	 (if (window-minibuffer-p (selected-window))
@@ -352,10 +306,6 @@ If SUFFIX is nil, \"-original\" is added. "
 		       mw32-ime-coding-system-language-environment-alist)))
 	   (mw32-ime-init-mode-line-display)
 	   (mw32-ime-mode-line-update)
-	   (add-hook 'select-window-functions
-		     'mw32-ime-select-window-hook)
-	   (add-hook 'set-selected-window-buffer-functions
-		     'mw32-ime-set-selected-window-buffer-hook)
 	   (define-key global-map [kanji] 'mw32-ime-toggle)
 	   (define-key global-map [C-kanji] 'mw32-ime-toggle) ; remove me!
 	   (define-key global-map [M-kanji] 'mw32-ime-toggle) ; remove me!
@@ -369,10 +319,6 @@ If SUFFIX is nil, \"-original\" is added. "
 	 (setq-default mode-line-format
 		       mw32-ime-mode-line-format-original)
 	 (force-mode-line-update t)
-	 (remove-hook 'select-window-functions
-		      'mw32-ime-select-window-hook)
-	 (remove-hook 'set-selected-window-buffer-functions
-		      'mw32-ime-set-selected-window-buffer-hook)
 	 (define-key global-map [kanji] 'ignore))))
 
 (defun mw32-ime-state-switch (&optional arg)
@@ -386,8 +332,7 @@ If SUFFIX is nil, \"-original\" is added. "
     (setq current-input-method nil)
     (run-hooks 'input-method-inactivate-hook)
     (setq describe-current-input-method-function nil)
-    (fep-force-off t)
-    ))
+    (fep-force-off t)))
 
 (register-input-method "MW32-IME" "Japanese" 'mw32-ime-state-switch ""
 		       "MW32 System IME")
