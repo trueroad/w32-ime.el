@@ -34,7 +34,6 @@ Even if IME state is not changed, these functiona are maybe called.")
 (defvar mw32-ime-mode-line-format-original nil
   "Original mode line format.")
 
-(setq search-highlight t)
 
 ;; isearch ime keymap
 
@@ -65,129 +64,6 @@ Even if IME state is not changed, these functiona are maybe called.")
 (define-key isearch-ime-keymap "\M-p" 'isearch-command-win32ime)
 (define-key isearch-ime-keymap "\M-y" 'isearch-command-win32ime)
 (define-key isearch-ime-keymap "\M-\t" 'isearch-command-win32ime)
-
-;;;
-;;; Emulation functions.
-;;;
-
-;;
-;; Section: General definitions
-;;
-
-(defun wildcard-to-regexp (pattern)
-  (let ((i 0)
-	(len (length pattern))
-	(quotestr "")
-	(result "")
-	char
-	result)
-    (while (< i len)
-      (setq char (aref pattern i)
-	    i (1+ i))
-      (cond ((= char ?*)
-	     (setq result (concat result (regexp-quote quotestr) ".*")
-		   quotestr ""))
-	    ((= char ??)
-	     (setq result (concat result (regexp-quote quotestr) ".")
-		   quotestr ""))
-	    (t
-	     (setq quotestr (concat quotestr (char-to-string char))))))
-    (concat "\\`" result (regexp-quote quotestr) "\\'")))
-
-;;
-;; Section: X color
-;;
-
-; (defun x-color-values (name &optional frame)
-;   (let ((value (w32-color-values name)))
-;     (mapcar (lambda (x) (ash x 8))
-;             value)))
-
-;;
-;; Section: X selection
-;;
-
-; (defalias 'x-selection-exists-p 'w32-clipboard-data-exist-p)
-
-;;
-;; Section: Font
-;;
-
-; (defun w32-list-fonts (pattern &optional face frame max)
-;   (setq pattern (wildcard-to-regexp pattern))
-;   (if (null max) (setq max 2000))
-;   (let ((curfl global-fontset-alist)
-; 	curfs
-; 	result)
-;   (while (and (> max 0)
-; 	      (setq curfs (car (car curfl))))
-;       (if (string-match pattern curfs)
-; 	  (setq result (cons curfs result)
-; 		max (1- max)))
-;       (setq curfl (cdr curfl)))
-;   (setq curfl (w32-font-list))
-;   (while (and (> max 0)
-; 	      (setq curfs (car curfl)))
-;       (if (string-match pattern curfs)
-; 	  (setq result (cons curfs result)
-; 		max (1- max)))
-;       (setq curfl (cdr curfl)))
-;   result))
-
-; (defalias 'x-list-fonts 'w32-list-fonts)
-
-;;
-;; Section: X geometry (-g option)
-;;
-
-(defun x-parse-geometry (str)
-  (let* ((size-regexp "\\([+\\-]?[0-9]+\\)[xX]\\([+\\-]?[0-9]+\\)")
-	 (location-regexp "\\([+\\-][+\\-]?[0-9]+\\)")
-	 (func (lambda (x)
-		 (cond ((= (aref x 0) ?+)
-			(cons '+ (string-to-number
-				  (substring x 1))))
-		       ((= (aref x 0) ?-)
-			(cons '- (string-to-number
-				  (substring x 1))))
-		       (t nil))))
-	 location-x location-y size-x size-y result)
-    (if (string-match "^=?" str)
-	(setq str (substring str (match-end 0))))
-    (if (string-match
-	 (concat "^" size-regexp)
-	 str)
-	(setq size-x (string-to-number (match-string 1 str))
-	      size-y (string-to-number (match-string 2 str))
-	      str (substring str (match-end 0))))
-    (if (string-match
-	 (concat "^" location-regexp location-regexp)
-	 str)
-	(setq location-x (match-string 1 str)
-	      location-y (match-string 2 str)
-	      location-x (funcall func location-x)
-	      location-y (funcall func location-y)))
-    (if size-x
-	(setq result (cons (cons 'width size-x) result)))
-    (if size-y
-	(setq result (cons (cons 'height size-y) result)))
-    (cond ((eq (car location-x) '+)
-	   (setq result
-		 (cons (cons 'left (cdr location-x))
-		       result)))
-	  ((eq (car location-x) '-)
-	   (setq result
-		 (cons (cons 'right (cdr location-x))
-		       result))))
-    (cond ((eq (car location-y) '+)
-	   (setq result
-		 (cons (cons 'top (cdr location-y))
-		       result)))
-	  ((eq (car location-y) '-)
-	   (setq result
-		 (cons (cons 'bottom (cdr location-y))
-		       result))))
-    result))
 
 ;;
 ;; Section: IME
