@@ -1,35 +1,35 @@
-;;;;; meadow-ntemacs.el ---- Meadow features for NTEmacs.
+;;;;; w32-ime.el ---- Meadow features for NTEmacs.
 ;;
 ;;   Author H.Miyashita
 ;;
 ;;;;;
 
-(defgroup Meadow-ntemacs nil
-  "Meadow-ntemacs"
+(defgroup W32-IME nil
+  "w32-ime"
   :group 'emacs)
 
-(defvar mw32-last-selection nil
+(defvar w32-last-selection nil
   "It is stored the last data from Emacs.")
 
 ;----------
 
-(defvar mw32-ime-on-hook nil
+(defvar w32-ime-on-hook nil
   "Functions to eval when IME is turned on at least.
 Even if IME state is not changed, these functiona are maybe called.")
-(defvar mw32-ime-off-hook nil
+(defvar w32-ime-off-hook nil
   "Functions to eval when IME is turned off at least.
 Even if IME state is not changed, these functiona are maybe called.")
-(defvar mw32-ime-buffer-switch-p t
+(defvar w32-ime-buffer-switch-p t
   "If this variable is nil, IME control when buffer is switched is disabled.")
-(defvar mw32-ime-show-mode-line t
+(defvar w32-ime-show-mode-line t
   "When t, mode line indicates IME state.")
-(defvar mw32-ime-mode-line-state-indicator "[O]"
+(defvar w32-ime-mode-line-state-indicator "[O]"
   "This is shown at the mode line. It is regarded as state of ime.")
-(make-variable-buffer-local 'mw32-ime-mode-line-state-indicator)
-(put 'mw32-ime-mode-line-state-indicator 'permanent-local t)
-(defvar mw32-ime-mode-line-state-indicator-list '("-" "[|]" "[O]")
+(make-variable-buffer-local 'w32-ime-mode-line-state-indicator)
+(put 'w32-ime-mode-line-state-indicator 'permanent-local t)
+(defvar w32-ime-mode-line-state-indicator-list '("-" "[|]" "[O]")
   "List of IME state indicator string.")
-(defvar mw32-ime-mode-line-format-original nil
+(defvar w32-ime-mode-line-format-original nil
   "Original mode line format.")
 
 ;;
@@ -38,7 +38,7 @@ Even if IME state is not changed, these functiona are maybe called.")
 
 ;; This is temporal solution.  In the future, we will prepare
 ;; dynamic configuration.
-(defvar mw32-ime-coding-system-language-environment-alist
+(defvar w32-ime-coding-system-language-environment-alist
   '(("Japanese" . japanese-shift-jis)
     ("Chinese-GB" . chinese-iso-8bit)
     ("Chinese-BIG5" . chinese-big5)
@@ -68,147 +68,148 @@ If SUFFIX is nil, \"-original\" is added. "
 	     (when interactive-p
 	       (list 'interactive interactive-arg))
 	     (`(cond
-		((and (fep-get-mode)
-		      (equal current-input-method "MW32-IME"))
- 		 (fep-force-off)
+		((and (ime-get-mode)
+		      (equal current-input-method "W32-IME"))
+ 		 (ime-force-off)
 		 (unwind-protect
 		     (apply '(, original-function) arguments)
-		   (when (and (not (fep-get-mode))
-			      (equal current-input-method "MW32-IME"))
-		     (fep-force-on))))
+		   (when (and (not (ime-get-mode))
+			      (equal current-input-method "W32-IME"))
+		     (ime-force-on))))
 		(t
 		 (apply '(, original-function)
 			arguments))))))))))
 
-(defvar mw32-ime-toroku-region-yomigana nil
+(defvar w32-ime-toroku-region-yomigana nil
   "* if this variable is string, toroku-region regard this value as yomigana.")
 
-(defun mw32-ime-toroku-region (begin end)
+(defun w32-ime-toroku-region (begin end)
   (interactive "r")
   (let ((string (buffer-substring begin end))
-	(mw32-ime-buffer-switch-p nil)
-	(reading mw32-ime-toroku-region-yomigana))
+	(w32-ime-buffer-switch-p nil)
+	(reading w32-ime-toroku-region-yomigana))
     (unless (stringp reading)
       (w32-set-ime-mode 'hiragana)
       (setq reading
 	    (read-multilingual-string
-            (format "Input reading of \"%s\":" string) nil "MW32-IME")))
+            (format "Input reading of \"%s\":" string) nil "W32-IME")))
     (w32-ime-register-word-dialog reading string)))
 
 ;; for IME management system.
 
-(defun mw32-ime-sync-state (window)
-  (when mw32-ime-buffer-switch-p
+(defun w32-ime-sync-state (window)
+  (when w32-ime-buffer-switch-p
     (with-current-buffer (window-buffer window)
       (let* ((frame (window-frame window))
-	     (ime-state (fep-get-mode)))
+	     (ime-state (ime-get-mode)))
 	(cond
 	 ((and (not ime-state)
-	       (equal current-input-method "MW32-IME"))
-	  (fep-force-on nil)
-	  (run-hooks 'mw32-ime-on-hook))
+	       (equal current-input-method "W32-IME"))
+	  (ime-force-on nil)
+	  (run-hooks 'w32-ime-on-hook))
 	 ((and ime-state
-	       (not (equal current-input-method "MW32-IME")))
-	  (when (= (w32-ime-undetermined-string-length) 0)
-	    (fep-force-off nil)
-	    (run-hooks 'mw32-ime-off-hook))))))))
+	       (not (equal current-input-method "W32-IME")))
+;;;	  (when (= (w32-ime-undetermined-string-length) 0)
+	  (ime-force-off nil)
+	  (run-hooks 'w32-ime-off-hook)))))))
 
-(defun mw32-ime-set-selected-window-buffer-hook (oldbuf newwin newbuf)
-  (mw32-ime-sync-state newwin))
+(defun w32-ime-set-selected-window-buffer-hook (oldbuf newwin newbuf)
+  (w32-ime-sync-state newwin))
 
-(defun mw32-ime-select-window-hook (old new)
-  (mw32-ime-sync-state new))
+(defun w32-ime-select-window-hook (old new)
+  (w32-ime-sync-state new))
 
-(defun mw32-ime-mode-line-update ()
+(defun w32-ime-mode-line-update ()
   (cond
-   (mw32-ime-show-mode-line
+   (w32-ime-show-mode-line
     (unless (window-minibuffer-p (selected-window))
-      (setq mw32-ime-mode-line-state-indicator
-	    (nth (if (fep-get-mode) 1 2)
-		 mw32-ime-mode-line-state-indicator-list))))
+      (setq w32-ime-mode-line-state-indicator
+	    (nth (if (ime-get-mode) 1 2)
+		 w32-ime-mode-line-state-indicator-list))))
    (t
-    (setq mw32-ime-mode-line-state-indicator
-	  (nth 0 mw32-ime-mode-line-state-indicator-list))))
+    (setq w32-ime-mode-line-state-indicator
+	  (nth 0 w32-ime-mode-line-state-indicator-list))))
   (force-mode-line-update))
 
-(defun mw32-ime-init-mode-line-display ()
-  (unless (member 'mw32-ime-mode-line-state-indicator mode-line-format)
-    (setq mw32-ime-mode-line-format-original
+(defun w32-ime-init-mode-line-display ()
+  (unless (member 'w32-ime-mode-line-state-indicator mode-line-format)
+    (setq w32-ime-mode-line-format-original
 	  (default-value 'mode-line-format))
     (if (and (stringp (car mode-line-format))
 	     (string= (car mode-line-format) "-"))
 	(setq-default mode-line-format
 		      (cons ""
-			    (cons 'mw32-ime-mode-line-state-indicator
+			    (cons 'w32-ime-mode-line-state-indicator
 				  (cdr mode-line-format))))
       (setq-default mode-line-format
 		    (cons ""
-			  (cons 'mw32-ime-mode-line-state-indicator
+			  (cons 'w32-ime-mode-line-state-indicator
 				mode-line-format))))
     (force-mode-line-update t)))
 
-(defun mw32-ime-toggle ()
-  (interactive)
-  (if (equal current-input-method "MW32-IME")
-      (inactivate-input-method)
-    (activate-input-method "MW32-IME")))
+;; (defun w32-ime-toggle ()
+;;   (interactive)
+;;   (if (equal current-input-method "W32-IME")
+;;       (inactivate-input-method)
+;;     (activate-input-method "W32-IME")))
 
-(defun mw32-ime-initialize ()
+(defun w32-ime-initialize ()
   (cond
    ((and (eq system-type 'windows-nt)
 	 (eq window-system 'w32)
-	 (featurep 'meadow-ntemacs))
+	 (featurep 'w32-ime))
     (let ((coding-system
 	   (assoc-string current-language-environment
-			 mw32-ime-coding-system-language-environment-alist
+			 w32-ime-coding-system-language-environment-alist
 			 t)))
-      (mw32-ime-init-mode-line-display)
-      (mw32-ime-mode-line-update)
+      (w32-ime-init-mode-line-display)
+      (w32-ime-mode-line-update)
       (add-hook 'select-window-functions
-		'mw32-ime-select-window-hook)
+		'w32-ime-select-window-hook)
       (add-hook 'set-selected-window-buffer-functions
-		'mw32-ime-set-selected-window-buffer-hook)
-      (define-key global-map [kanji] 'mw32-ime-toggle)
+		'w32-ime-set-selected-window-buffer-hook)
+;;       (define-key global-map [kanji] 'w32-ime-toggle)
+      (define-key global-map [kanji] 'toggle-input-method)
       (if coding-system
 	  (set-keyboard-coding-system (cdr coding-system)))))))
 
-(defun mw32-ime-uninitialize ()
+(defun w32-ime-uninitialize ()
   (cond ((and (eq system-type 'windows-nt)
 	      (eq window-system 'w32)
 	      (featurep 'meadow-ntemacs))
 	 (setq-default mode-line-format
-		       mw32-ime-mode-line-format-original)
+		       w32-ime-mode-line-format-original)
 	 (force-mode-line-update t)
 	 (remove-hook 'select-window-functions
-		      'mw32-ime-select-window-hook)
+		      'w32-ime-select-window-hook)
 	 (remove-hook 'set-selected-window-buffer-functions
-		      'mw32-ime-set-selected-window-buffer-hook)
+		      'w32-ime-set-selected-window-buffer-hook)
 	 (define-key global-map [kanji] 'ignore))))
 
-(defun mw32-ime-exit-from-minibuffer ()
+(defun w32-ime-exit-from-minibuffer ()
   (inactivate-input-method)
   (when (<= (minibuffer-depth) 1)
-    (remove-hook 'minibuffer-exit-hook 'mw32-ime-exit-from-minibuffer)))
+    (remove-hook 'minibuffer-exit-hook 'w32-ime-exit-from-minibuffer)))
 
-(defun mw32-ime-state-switch (&optional arg)
+(defun w32-ime-state-switch (&optional arg)
   (if arg
       (progn
 	(setq inactivate-current-input-method-function
-	      'mw32-ime-state-switch)
+	      'w32-ime-state-switch)
 	(run-hooks 'input-method-activate-hook)
-	(run-hooks 'mw32-ime-on-hook)
+	(run-hooks 'w32-ime-on-hook)
 	(setq describe-current-input-method-function nil)
 	(when (eq (selected-window) (minibuffer-window))
-	  (add-hook 'minibuffer-exit-hook 'mw32-ime-exit-from-minibuffer))
-	(fep-force-on))
+	  (add-hook 'minibuffer-exit-hook 'w32-ime-exit-from-minibuffer))
+	(ime-force-on))
     (setq current-input-method nil)
     (run-hooks 'input-method-inactivate-hook)
-    (run-hooks 'mw32-ime-off-hook)
+    (run-hooks 'w32-ime-off-hook)
     (setq describe-current-input-method-function nil)
-    (fep-force-off))
-  (mw32-ime-mode-line-update))
+    (ime-force-off))
+  (w32-ime-mode-line-update))
 
-(register-input-method "MW32-IME" "Japanese" 'mw32-ime-state-switch ""
-		       "MW32 System IME")
+(register-input-method "W32-IME" "Japanese" 'w32-ime-state-switch ""
+		       "W32 System IME")
 
-(provide 'meadow-ntemacs)
+(provide 'w32-ime)
