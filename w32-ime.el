@@ -36,13 +36,13 @@ Even if IME state is not changed, these functiona are maybe called.")
 ;; Section: IME
 ;;
 
-;; This is temporal solution.  In the future, we will prepare
-;; dynamic configuration.
-(defvar w32-ime-coding-system-language-environment-alist
-  '(("Japanese" . japanese-shift-jis)
-    ("Chinese-GB" . chinese-iso-8bit)
-    ("Chinese-BIG5" . chinese-big5)
-    ("Korean" . korean-iso-8bit)))
+;; ;; This is temporal solution.  In the future, we will prepare
+;; ;; dynamic configuration.
+;; (defvar w32-ime-coding-system-language-environment-alist
+;;   '(("Japanese" . japanese-shift-jis)
+;;     ("Chinese-GB" . chinese-iso-8bit)
+;;     ("Chinese-BIG5" . chinese-big5)
+;;     ("Korean" . korean-iso-8bit)))
 
 ;;
 ;; IME state indicator
@@ -92,7 +92,7 @@ If SUFFIX is nil, \"-original\" is added. "
       (w32-set-ime-mode 'hiragana)
       (setq reading
 	    (read-multilingual-string
-            (format "Input reading of \"%s\":" string) nil "W32-IME")))
+            (format "Input reading of \"%s\": " string) nil "W32-IME")))
     (w32-ime-register-word-dialog reading string)))
 
 ;; for IME management system.
@@ -154,37 +154,48 @@ If SUFFIX is nil, \"-original\" is added. "
 ;;     (activate-input-method "W32-IME")))
 
 (defun w32-ime-initialize ()
-  (cond
-   ((and (eq system-type 'windows-nt)
-	 (eq window-system 'w32)
-	 (featurep 'w32-ime))
-    (let ((coding-system
-	   (assoc-string current-language-environment
-			 w32-ime-coding-system-language-environment-alist
-			 t)))
-      (w32-ime-init-mode-line-display)
-      (w32-ime-mode-line-update)
-      (add-hook 'select-window-functions
-		'w32-ime-select-window-hook)
-      (add-hook 'set-selected-window-buffer-functions
-		'w32-ime-set-selected-window-buffer-hook)
-;;       (define-key global-map [kanji] 'w32-ime-toggle)
-      (define-key global-map [kanji] 'toggle-input-method)
-      (if coding-system
-	  (set-keyboard-coding-system (cdr coding-system)))))))
+;;   (cond
+;;    ((and (eq system-type 'windows-nt)
+;; 	 (eq window-system 'w32)
+;; 	 (featurep 'w32-ime))
+;;     (let ((coding-system
+;; 	   (assoc-string current-language-environment
+;; 			 w32-ime-coding-system-language-environment-alist
+;; 			 t)))
+;;       (w32-ime-init-mode-line-display)
+;;       (w32-ime-mode-line-update)
+;;       (add-hook 'select-window-functions
+;; 		'w32-ime-select-window-hook)
+;;       (add-hook 'set-selected-window-buffer-functions
+;; 		'w32-ime-set-selected-window-buffer-hook)
+;;        (define-key global-map [kanji] 'w32-ime-toggle)
+;;       (define-key global-map [kanji] 'toggle-input-method)
+;;        (if coding-system
+;;  	  (set-keyboard-coding-system (cdr coding-system)))))))
+   (when (and (eq system-type 'windows-nt)
+	      (eq window-system 'w32)
+	      (featurep 'w32-ime))
+     (w32-ime-init-mode-line-display)
+     (w32-ime-mode-line-update)
+     (add-hook 'select-window-functions
+	       'w32-ime-select-window-hook)
+     (add-hook 'set-selected-window-buffer-functions
+	       'w32-ime-set-selected-window-buffer-hook)
+     (define-key global-map [kanji] 'toggle-input-method)
+     (set-keyboard-coding-system 'utf-8)))
 
 (defun w32-ime-uninitialize ()
-  (cond ((and (eq system-type 'windows-nt)
-	      (eq window-system 'w32)
-	      (featurep 'meadow-ntemacs))
-	 (setq-default mode-line-format
-		       w32-ime-mode-line-format-original)
-	 (force-mode-line-update t)
-	 (remove-hook 'select-window-functions
-		      'w32-ime-select-window-hook)
-	 (remove-hook 'set-selected-window-buffer-functions
-		      'w32-ime-set-selected-window-buffer-hook)
-	 (define-key global-map [kanji] 'ignore))))
+  (when (and (eq system-type 'windows-nt)
+	     (eq window-system 'w32)
+	     (featurep 'w32-ime))
+    (setq-default mode-line-format
+		  w32-ime-mode-line-format-original)
+    (force-mode-line-update t)
+    (remove-hook 'select-window-functions
+		 'w32-ime-select-window-hook)
+    (remove-hook 'set-selected-window-buffer-functions
+		 'w32-ime-set-selected-window-buffer-hook)
+    (define-key global-map [kanji] 'ignore)))
 
 (defun w32-ime-exit-from-minibuffer ()
   (inactivate-input-method)
