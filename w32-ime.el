@@ -147,31 +147,7 @@ If SUFFIX is nil, \"-original\" is added. "
 				mode-line-format))))
     (force-mode-line-update t)))
 
-;; (defun w32-ime-toggle ()
-;;   (interactive)
-;;   (if (equal current-input-method "W32-IME")
-;;       (inactivate-input-method)
-;;     (activate-input-method "W32-IME")))
-
 (defun w32-ime-initialize ()
-;;   (cond
-;;    ((and (eq system-type 'windows-nt)
-;; 	 (eq window-system 'w32)
-;; 	 (featurep 'w32-ime))
-;;     (let ((coding-system
-;; 	   (assoc-string current-language-environment
-;; 			 w32-ime-coding-system-language-environment-alist
-;; 			 t)))
-;;       (w32-ime-init-mode-line-display)
-;;       (w32-ime-mode-line-update)
-;;       (add-hook 'select-window-functions
-;; 		'w32-ime-select-window-hook)
-;;       (add-hook 'set-selected-window-buffer-functions
-;; 		'w32-ime-set-selected-window-buffer-hook)
-;;        (define-key global-map [kanji] 'w32-ime-toggle)
-;;       (define-key global-map [kanji] 'toggle-input-method)
-;;        (if coding-system
-;;  	  (set-keyboard-coding-system (cdr coding-system)))))))
    (when (and (eq system-type 'windows-nt)
 	      (eq window-system 'w32)
 	      (featurep 'w32-ime))
@@ -181,8 +157,8 @@ If SUFFIX is nil, \"-original\" is added. "
 	       'w32-ime-select-window-hook)
      (add-hook 'set-selected-window-buffer-functions
 	       'w32-ime-set-selected-window-buffer-hook)
-     (define-key global-map [kanji] 'toggle-input-method)
-     (set-keyboard-coding-system 'utf-8)))
+     (define-key global-map [kanji] 'toggle-input-method)))
+;;     (set-keyboard-coding-system 'utf-8)))
 
 (defun w32-ime-uninitialize ()
   (when (and (eq system-type 'windows-nt)
