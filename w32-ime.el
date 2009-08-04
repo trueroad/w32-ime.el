@@ -67,18 +67,17 @@ If SUFFIX is nil, \"-original\" is added. "
 	     'lambda '(&rest arguments)
 	     (when interactive-p
 	       (list 'interactive interactive-arg))
-	     (`(cond
+	     `(cond
 		((and (ime-get-mode)
 		      (equal current-input-method "W32-IME"))
  		 (ime-force-off)
 		 (unwind-protect
-		     (apply '(, original-function) arguments)
+		     (apply ',original-function arguments)
 		   (when (and (not (ime-get-mode))
 			      (equal current-input-method "W32-IME"))
 		     (ime-force-on))))
 		(t
-		 (apply '(, original-function)
-			arguments))))))))))
+		 (apply ',original-function arguments)))))))))
 
 (defvar w32-ime-toroku-region-yomigana nil
   "* if this variable is string, toroku-region regard this value as yomigana.")
