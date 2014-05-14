@@ -147,7 +147,7 @@ If SUFFIX is nil, \"-original\" is added. "
     (force-mode-line-update t)))
 
 (defun w32-ime-initialize ()
-   (when (and (eq system-type 'windows-nt)
+   (when (and (or (eq system-type 'windows-nt) (eq system-type 'cygwin))
 	      (eq window-system 'w32)
 	      (featurep 'w32-ime))
      (w32-ime-init-mode-line-display)
@@ -160,7 +160,7 @@ If SUFFIX is nil, \"-original\" is added. "
 ;;     (set-keyboard-coding-system 'utf-8)))
 
 (defun w32-ime-uninitialize ()
-  (when (and (eq system-type 'windows-nt)
+  (when (and (or (eq system-type 'windows-nt) (eq system-type 'cygwin))
 	     (eq window-system 'w32)
 	     (featurep 'w32-ime))
     (setq-default mode-line-format
@@ -189,7 +189,7 @@ If SUFFIX is nil, \"-original\" is added. "
 	  (add-hook 'minibuffer-exit-hook 'w32-ime-exit-from-minibuffer))
 	(ime-force-on))
     (setq current-input-method nil)
-    (run-hooks 'input-method-inactivate-hook)
+    (run-hooks 'input-method-deactivate-hook)
     (run-hooks 'w32-ime-off-hook)
     (setq describe-current-input-method-function nil)
     (ime-force-off))
