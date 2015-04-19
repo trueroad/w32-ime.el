@@ -97,20 +97,25 @@ If SUFFIX is nil, \"-original\" is added. "
 ;; for IME management system.
 
 (defun w32-ime-sync-state (window)
-  (when w32-ime-buffer-switch-p
-    (with-current-buffer (window-buffer window)
-      (let* ((frame (window-frame window))
-	     (ime-state (ime-get-mode)))
-	(cond
-	 ((and (not ime-state)
-	       (equal current-input-method "W32-IME"))
-	  (ime-force-on nil)
-	  (run-hooks 'w32-ime-on-hook))
-	 ((and ime-state
-	       (not (equal current-input-method "W32-IME")))
-;;;	  (when (= (w32-ime-undetermined-string-length) 0)
-	  (ime-force-off nil)
-	  (run-hooks 'w32-ime-off-hook)))))))
+  (if w32-ime-buffer-switch-p
+      (progn
+	(with-current-buffer (window-buffer window)
+	  (let* ((frame (window-frame window))
+		 (ime-state (ime-get-mode)))
+	    (cond
+	     ((and (not ime-state)
+		   (equal current-input-method "W32-IME"))
+	      (ime-force-on nil)
+	      (run-hooks 'w32-ime-on-hook))
+	     ((and ime-state
+		   (not (equal current-input-method "W32-IME")))
+	      (ime-force-off nil)
+	      (run-hooks 'w32-ime-off-hook))))))
+    (progn
+      (dolist (win (window-list))
+	(with-current-buffer (window-buffer win)
+	  (w32-ime-mode-line-update))))
+    ))
 
 (defun w32-ime-set-selected-window-buffer-hook (oldbuf newwin newbuf)
   (w32-ime-sync-state newwin))
