@@ -70,7 +70,7 @@ If SUFFIX is nil, \"-original\" is added. "
 	     `(cond
 		((and (ime-get-mode)
 		      (equal current-input-method "W32-IME"))
- 		 (ime-force-off)
+		 (ime-force-off)
 		 (unwind-protect
 		     (apply ',original-function arguments)
 		   (when (and (not (ime-get-mode))
@@ -173,14 +173,14 @@ If SUFFIX is nil, \"-original\" is added. "
     (define-key global-map [kanji] 'ignore)))
 
 (defun w32-ime-exit-from-minibuffer ()
-  (inactivate-input-method)
+  (deactivate-input-method)
   (when (<= (minibuffer-depth) 1)
     (remove-hook 'minibuffer-exit-hook 'w32-ime-exit-from-minibuffer)))
 
 (defun w32-ime-state-switch (&optional arg)
   (if arg
       (progn
-	(setq inactivate-current-input-method-function
+	(setq deactivate-current-input-method-function
 	      'w32-ime-state-switch)
 	(run-hooks 'input-method-activate-hook)
 	(run-hooks 'w32-ime-on-hook)

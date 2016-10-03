@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 ;;
-;; smart-im frees you from the frustration about IM. 
+;; smart-im frees you from the frustration about IM.
 ;; It disables an IM automatically according to a situation.
 
 ;;; Install:
@@ -42,7 +42,7 @@
 
 (defun sime-activate-input-method ()
   (setq sime-saved-input-method (list current-input-method))
-  (inactivate-input-method))
+  (deactivate-input-method))
 (defun sime-inactivate-input-method ()
   (when sime-saved-input-method
     (activate-input-method (car sime-saved-input-method))
@@ -65,7 +65,7 @@
     (if (or (not im)
 	    (not (ad-get-arg 2)))
 	ad-do-it
-      (inactivate-input-method)
+      (deactivate-input-method)
       ad-do-it
       (activate-input-method im))))
 
@@ -76,15 +76,15 @@
   (let ((sime-ad-toggle-ime-mapped-key-list nil)
 	(im current-input-method))
     (dolist (k (where-is-internal
-		'toggle-input-method overriding-local-map nil nil 
-		(command-remapping 'toggle-input-method)))
+                'toggle-input-method overriding-local-map nil nil
+                (command-remapping 'toggle-input-method)))
       (when (integerp (aref k 0))
 	(setq sime-ad-toggle-ime-mapped-key-list
 	      (cons (aref k 0) sime-ad-toggle-ime-mapped-key-list))))
 
     (ad-enable-advice 'read-key 'around 'sime-ad-read-key)
     (ad-activate 'read-key)
-    (inactivate-input-method)
+    (deactivate-input-method)
     ad-do-it
     (activate-input-method im)
     (ad-disable-advice 'read-key 'around 'sime-ad-read-key)
@@ -97,65 +97,45 @@
     (while flag
       ad-do-it
       (if (not (memq ad-return-value
-		       sime-ad-toggle-ime-mapped-key-list))
+                     sime-ad-toggle-ime-mapped-key-list))
 	  (setq flag nil)
 	(toggle-input-method)
 	(message msg)))))
 
 ;;
 ;; universal-argument
-(defun sime-universal-toggle-input-method (arg)
-  (interactive "P")
-  (if (consp arg)
-      (universal-argument-other-key arg)
-    (toggle-input-method)
-    (setq prefix-arg arg
-	  universal-argument-num-events
-	  (length (this-command-keys)))))
-
-; patch universal-argument-map after init
-(add-hook 
- 'after-init-hook
- #'(lambda ()
-     (require 'simple)
-     (dolist (key (where-is-internal
-		   'toggle-input-method global-map nil nil 
-		   (command-remapping 'toggle-input-method)))
-       (when (= (length key) 1)
-	 (define-key
-	   universal-argument-map
-	   key 'sime-universal-toggle-input-method)))))
-
 (defadvice universal-argument
-  (after sime-ad-universal-argument compile activate)
+    (before sime-ad-universal-argument compile activate)
+  (setq sime-saved-input-method
+        (or sime-saved-input-method
+            (list current-input-method)))
+  (deactivate-input-method))
+
+(defun universal-argument--mode ()
   (setq sime-saved-input-method
 	(or sime-saved-input-method
 	    (list current-input-method)))
-  (inactivate-input-method))
-
-(defadvice restore-overriding-map
-  (after sime-ad-restore-overriding-map compile activate)
-  (when sime-saved-input-method
-      (activate-input-method (car sime-saved-input-method))
-      (setq sime-saved-input-method nil)))
+  (deactivate-input-method)
+  (prefix-command-update)
+  (set-transient-map universal-argument-map #'sime-inactivate-input-method))
 
 ;; a keyboard which has no KANJI-KEY
 ;; entering/leaving KANJI-mode key-sequence is <kanji><M-kanji>
 ;; then we should pass prefix-arg to next command.
 (global-set-key
-  [M-kanji] 
-  #'(lambda (arg) 
+  [M-kanji]
+  #'(lambda (arg)
       (interactive "P")
       (setq prefix-arg arg)))
 
 ;;
 ;; others
 (defmacro wrap-function-to-control-input-method (fcn)
-  `(defadvice ,fcn (around 
-		    ,(make-symbol (concat "sime-ad-" (symbol-name fcn)))
-		    compile activate)
+  `(defadvice ,fcn (around
+                    ,(make-symbol (concat "sime-ad-" (symbol-name fcn)))
+                    compile activate)
      (let ((im current-input-method))
-       (inactivate-input-method)
+       (deactivate-input-method)
        ad-do-it
        (activate-input-method im))))
 
