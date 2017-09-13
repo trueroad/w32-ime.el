@@ -141,7 +141,8 @@
 
 (wrap-function-to-control-input-method map-y-or-n-p)
 (wrap-function-to-control-input-method y-or-n-p)
-(wrap-function-to-control-input-method read-key-sequence)
+(with-eval-after-load "register"
+  (wrap-function-to-control-input-method read-key-sequence))
 
 ;; disable W32-IME control during processing the timer handler
 (defadvice timer-event-handler
