@@ -141,14 +141,29 @@
 
 (wrap-function-to-control-input-method map-y-or-n-p)
 (wrap-function-to-control-input-method y-or-n-p)
-(with-eval-after-load "register"
-  (wrap-function-to-control-input-method read-key-sequence))
+(wrap-function-to-control-input-method read-key-sequence)
 
 ;; disable W32-IME control during processing the timer handler
 (defadvice timer-event-handler
   (around sime-ad-timer-event-handler compile activate)
   (let ((w32-ime-buffer-switch-p nil))
     ad-do-it))
+
+;; turn IME off when specifying a register
+(with-eval-after-load "register"
+  (fset 'saved-read-key (symbol-function 'read-key))
+  (defun read-key-with-ime-off (&optional prompt)
+    (let ((im current-input-method)
+	  (key))
+      (deactivate-input-method)
+      (setq key (saved-read-key prompt))
+      (activate-input-method im)
+      key))
+  (defun register-read-with-preview-with-ime-off (orig-fun &rest args)
+    (cl-letf (((symbol-function 'read-key)
+	       (symbol-function 'read-key-with-ime-off)))
+      (apply orig-fun args)))
+  (advice-add 'register-read-with-preview :around #'register-read-with-preview-with-ime-off))
 
 (provide 'smart-ime)
 ;; -*- mode: Emacs-Lisp; coding: euc-jp-unix -*-
