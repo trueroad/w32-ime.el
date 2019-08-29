@@ -1,4 +1,4 @@
-;;;;; w32-ime.el ---- Meadow features for NTEmacs.
+;;;;; w32-ime.el ---- Meadow features for NTEmacs. -*- lexical-binding: t -*-
 ;;
 ;;   Author H.Miyashita
 ;;
