@@ -1,4 +1,4 @@
-;;; smart-ime.el - smart Input Method
+;;; smart-ime.el - smart Input Method -*- lexical-binding: t -*-
 ;;
 ;; Copyright (C) 2011 HIROSHI OOTA
 
@@ -150,6 +150,9 @@
     ad-do-it))
 
 ;; turn IME off when specifying a register
+(eval-when-compile (require 'cl-macs))
+(declare-function saved-read-key "register" (&optional prompt))
+(declare-function register-read-with-preview-with-ime-off "register" (orig-fun &rest args))
 (with-eval-after-load "register"
   (fset 'saved-read-key (symbol-function 'read-key))
   (defun read-key-with-ime-off (&optional prompt)

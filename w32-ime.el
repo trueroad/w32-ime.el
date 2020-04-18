@@ -68,12 +68,12 @@ If SUFFIX is nil, \"-original\" is added. "
 	     (when interactive-p
 	       (list 'interactive interactive-arg))
 	     `(cond
-		((and (ime-get-mode)
+		((and (w32-get-ime-open-status)
 		      (equal current-input-method "W32-IME"))
 		 (ime-force-off)
 		 (unwind-protect
 		     (apply ',original-function arguments)
-		   (when (and (not (ime-get-mode))
+		   (when (and (not (w32-get-ime-open-status))
 			      (equal current-input-method "W32-IME"))
 		     (ime-force-on))))
 		(t
@@ -100,7 +100,7 @@ If SUFFIX is nil, \"-original\" is added. "
   (when w32-ime-buffer-switch-p
     (with-current-buffer (window-buffer window)
       (let* ((frame (window-frame window))
-	     (ime-state (ime-get-mode)))
+	     (ime-state (w32-get-ime-open-status)))
 	(cond
 	 ((and (not ime-state)
 	       (equal current-input-method "W32-IME"))
@@ -123,7 +123,7 @@ If SUFFIX is nil, \"-original\" is added. "
    (w32-ime-show-mode-line
     (unless (window-minibuffer-p (selected-window))
       (setq w32-ime-mode-line-state-indicator
-	    (nth (if (ime-get-mode) 1 2)
+	    (nth (if (w32-get-ime-open-status) 1 2)
 		 w32-ime-mode-line-state-indicator-list))))
    (t
     (setq w32-ime-mode-line-state-indicator
