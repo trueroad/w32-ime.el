@@ -99,8 +99,7 @@ If SUFFIX is nil, \"-original\" is added. "
 (defun w32-ime-sync-state (window)
   (when w32-ime-buffer-switch-p
     (with-current-buffer (window-buffer window)
-      (let* ((frame (window-frame window))
-	     (ime-state (w32-get-ime-open-status)))
+      (let* ((ime-state (w32-get-ime-open-status)))
 	(cond
 	 ((and (not ime-state)
 	       (equal current-input-method "W32-IME"))
