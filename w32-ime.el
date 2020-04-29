@@ -31,6 +31,8 @@ Even if IME state is not changed, these functiona are maybe called.")
   "List of IME state indicator string.")
 (defvar w32-ime-mode-line-format-original nil
   "Original mode line format.")
+(defvar w32-ime-input-method-title nil
+  "String denoting W32-IME input method.")
 
 ;;
 ;; Section: IME
@@ -124,16 +126,19 @@ If SUFFIX is nil, \"-original\" is added. "
   (w32-ime-sync-state new))
 
 (defun w32-ime-mode-line-update ()
-  (cond
-   (w32-ime-show-mode-line
-    (unless (window-minibuffer-p (selected-window))
-      (setq w32-ime-mode-line-state-indicator
-	    (nth (if (ime-get-mode) 1 2)
-		 w32-ime-mode-line-state-indicator-list))))
-   (t
-    (setq w32-ime-mode-line-state-indicator
-	  (nth 0 w32-ime-mode-line-state-indicator-list))))
-  (force-mode-line-update))
+  (if (featurep 'w32-ime)
+      (progn
+        (cond
+         (w32-ime-show-mode-line
+          (unless (window-minibuffer-p (selected-window))
+            (setq w32-ime-mode-line-state-indicator
+                  (nth (if (ime-get-mode) 1 2)
+                       w32-ime-mode-line-state-indicator-list))))
+         (t
+          (setq w32-ime-mode-line-state-indicator
+                (nth 0 w32-ime-mode-line-state-indicator-list))))
+        (force-mode-line-update))
+    ))
 
 (defun w32-ime-init-mode-line-display ()
   (unless (member 'w32-ime-mode-line-state-indicator mode-line-format)
@@ -192,15 +197,18 @@ If SUFFIX is nil, \"-original\" is added. "
 	(setq describe-current-input-method-function nil)
 	(when (eq (selected-window) (minibuffer-window))
 	  (add-hook 'minibuffer-exit-hook 'w32-ime-exit-from-minibuffer))
-	(ime-force-on))
+	(ime-force-on)
+        (setq current-input-method-title w32-ime-input-method-title))
     (setq current-input-method nil)
     (run-hooks 'input-method-deactivate-hook)
     (run-hooks 'w32-ime-off-hook)
     (setq describe-current-input-method-function nil)
-    (ime-force-off))
+    (ime-force-off)
+    (setq current-input-method-title nil))
   (w32-ime-mode-line-update))
 
 (register-input-method "W32-IME" "Japanese" 'w32-ime-state-switch ""
 		       "W32 System IME")
 
-(provide 'w32-ime)
+(if (symbol-function 'ime-get-mode)
+    (provide 'w32-ime))
