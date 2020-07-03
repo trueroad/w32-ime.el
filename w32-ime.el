@@ -112,9 +112,11 @@ If SUFFIX is nil, \"-original\" is added. "
 	  (run-hooks 'w32-ime-off-hook)))))))
 
 (defun w32-ime-set-selected-window-buffer-hook (oldbuf newwin newbuf)
+  (ignore oldbuf newwin newbuf)
   (w32-ime-sync-state newwin))
 
 (defun w32-ime-select-window-hook (old new)
+  (ignore old)
   (w32-ime-sync-state new))
 
 (defun w32-ime-mode-line-update ()
