@@ -114,8 +114,8 @@ If SUFFIX is nil, \"-original\" is added. "
 	      (ime-force-off nil)
 	      (run-hooks 'w32-ime-off-hook))))))
     (let ((ime-state (ime-get-mode)))
-      (dolist (win (window-list))
-	(with-current-buffer (window-buffer win)
+      (dolist (buffer (buffer-list))
+	(with-current-buffer buffer
 	  (cond
 	   ((and (not ime-state)
 		 current-input-method)
