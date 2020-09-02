@@ -269,6 +269,20 @@ C 実装部分も w32-ime.el も、独自に手を入れている部分があり
 * [20150419_TANE](https://github.com/trueroad/w32-ime.el/tree/20150419_TANE) for Emacs 24.5
 * （省略）
 * [20200815_TANE](https://github.com/trueroad/w32-ime.el/tree/20200815_TANE) for Emacs 27.1
+* [20200901_TANE](https://github.com/trueroad/w32-ime.el/tree/20200901_TANE) for Emacs 27.1
+
+なお、最新版には私の修正提案を取り入れていただきました。
+
+* IME 全バッファ同期（w32-ime-buffer-switch-p が nil）設定時に、
+  IM 状態も正しく同期できるように
+  [修正](https://github.com/trueroad/w32-ime.el/tree/20200824_Hosoda)
+* IME 全バッファ同期（w32-ime-buffer-switch-p が nil）設定時に、
+  他のフレームのモードラインも同期できるように
+  [修正](https://github.com/trueroad/w32-ime.el/tree/20200826_Hosoda)
+* IME 全バッファ同期（w32-ime-buffer-switch-p が nil）設定時に、
+  IME ON のまま C-s (isearch-forward) すると、
+  未変換文字の確定時に IME OFF になってしまう事象を
+  [修正](https://github.com/trueroad/w32-ime.el/tree/20200829_Hosoda)
 
 ## ライセンス
 
