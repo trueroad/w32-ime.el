@@ -124,8 +124,7 @@ An original function is saved to FUNCTION-SUFFIX when suffix is string.
 If SUFFIX is nil, \"-original\" is added."
   (let ((original-function
 	 (intern (concat (symbol-name fn) (or suffix "-original")))))
-    (cond
-     ((not (fboundp original-function))
+    (unless (fboundp original-function)
       (fset original-function (symbol-function fn))
       (fset fn
 	    (list
@@ -133,16 +132,16 @@ If SUFFIX is nil, \"-original\" is added."
 	     (when interactive-p
 	       (list 'interactive interactive-arg))
 	     `(cond
-		((and (ime-get-mode)
-		      (equal current-input-method "W32-IME"))
- 		 (ime-force-off)
-		 (unwind-protect
-		     (apply ',original-function arguments)
-		   (when (and (not (ime-get-mode))
-			      (equal current-input-method "W32-IME"))
-		     (ime-force-on))))
-		(t
-		 (apply ',original-function arguments)))))))))
+	       ((and (ime-get-mode)
+		     (equal current-input-method "W32-IME"))
+ 		(ime-force-off)
+		(unwind-protect
+		    (apply ',original-function arguments)
+		  (when (and (not (ime-get-mode))
+			     (equal current-input-method "W32-IME"))
+		    (ime-force-on))))
+	       (t
+		(apply ',original-function arguments))))))))
 
 (defvar w32-ime-toroku-region-yomigana nil
   "* if this variable is string, toroku-region regard this value as yomigana.")
