@@ -132,7 +132,7 @@ If SUFFIX is nil, \"-original\" is added. "
   (w32-ime-sync-state new))
 
 (defun w32-ime-mode-line-update ()
-  (if (featurep 'w32-ime)
+  (if (fboundp 'ime-get-mode)
       (progn
 	(cond
 	 (w32-ime-show-mode-line
@@ -168,7 +168,7 @@ If SUFFIX is nil, \"-original\" is added. "
 (defun w32-ime-initialize ()
    (when (and (or (eq system-type 'windows-nt) (eq system-type 'cygwin))
 	      (eq window-system 'w32)
-	      (featurep 'w32-ime))
+	      (fboundp 'ime-get-mode))
      (w32-ime-init-mode-line-display)
      (w32-ime-mode-line-update)
      (add-hook 'select-window-functions
@@ -181,7 +181,7 @@ If SUFFIX is nil, \"-original\" is added. "
 (defun w32-ime-uninitialize ()
   (when (and (or (eq system-type 'windows-nt) (eq system-type 'cygwin))
 	     (eq window-system 'w32)
-	     (featurep 'w32-ime))
+	     (fboundp 'ime-get-mode))
     (setq-default mode-line-format
 		  w32-ime-mode-line-format-original)
     (force-mode-line-update t)
@@ -220,5 +220,4 @@ If SUFFIX is nil, \"-original\" is added. "
 (register-input-method "W32-IME" "Japanese" 'w32-ime-state-switch ""
 		       "W32 System IME")
 
-(if (symbol-function 'ime-get-mode)
-    (provide 'w32-ime))
+(provide 'w32-ime)
