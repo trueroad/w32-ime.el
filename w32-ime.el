@@ -123,8 +123,7 @@ INTERACTIVE-ARG as its arguments.
 An original function is saved to FUNCTION-SUFFIX when suffix is string.
 If SUFFIX is nil, \"-original\" is added."
   (let ((original-function
-	 (intern (concat (symbol-name fn)
-			 (if suffix suffix "-original")))))
+	 (intern (concat (symbol-name fn) (or suffix "-original")))))
     (cond
      ((not (fboundp original-function))
       (fset original-function
