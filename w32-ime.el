@@ -203,21 +203,20 @@ OLD is the previous window.  NEW is the newly selected window."
 
 (defun w32-ime-mode-line-update ()
   "Update IME mode line."
-  (if (fboundp 'ime-get-mode)
-      (progn
-	(cond
-	 (w32-ime-show-mode-line
-	  (if (or
-	       (not w32-ime-buffer-switch-p)
-	       (and w32-ime-buffer-switch-p
-		    (not (window-minibuffer-p (selected-window)))))
-	      (setq w32-ime-mode-line-state-indicator
-		    (nth (if (ime-get-mode) 1 2)
-			 w32-ime-mode-line-state-indicator-list))))
-	 (t
+  (when (fboundp 'ime-get-mode)
+    (cond
+     (w32-ime-show-mode-line
+      (if (or
+	   (not w32-ime-buffer-switch-p)
+	   (and w32-ime-buffer-switch-p
+		(not (window-minibuffer-p (selected-window)))))
 	  (setq w32-ime-mode-line-state-indicator
-		(nth 0 w32-ime-mode-line-state-indicator-list))))
-	(force-mode-line-update))))
+		(nth (if (ime-get-mode) 1 2)
+		     w32-ime-mode-line-state-indicator-list))))
+     (t
+      (setq w32-ime-mode-line-state-indicator
+	    (nth 0 w32-ime-mode-line-state-indicator-list))))
+    (force-mode-line-update)))
 
 (defun w32-ime-init-mode-line-display ()
   "Initialize IME mode line."
