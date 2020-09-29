@@ -223,8 +223,7 @@ OLD is the previous window.  NEW is the newly selected window."
   (unless (member 'w32-ime-mode-line-state-indicator mode-line-format)
     (setq w32-ime-mode-line-format-original
 	  (default-value 'mode-line-format))
-    (if (and (stringp (car mode-line-format))
-	     (string= (car mode-line-format) "-"))
+    (if (equal (car mode-line-format) "-")
 	(setq-default mode-line-format
 		      (cons ""
 			    (cons 'w32-ime-mode-line-state-indicator
