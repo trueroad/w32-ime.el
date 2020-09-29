@@ -144,7 +144,7 @@ If SUFFIX is nil, \"-original\" is added."
 		(apply ',original-function arguments))))))))
 
 (defvar w32-ime-toroku-region-yomigana nil
-  "* if this variable is string, toroku-region regard this value as yomigana.")
+  "If this variable is string, toroku-region regard this value as yomigana.")
 
 (defun w32-ime-toroku-region (begin end)
   "Register words between BEGIN and END to the IME dictionary."
