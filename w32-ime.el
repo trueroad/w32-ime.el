@@ -126,8 +126,7 @@ If SUFFIX is nil, \"-original\" is added."
 	 (intern (concat (symbol-name fn) (or suffix "-original")))))
     (cond
      ((not (fboundp original-function))
-      (fset original-function
-	    (symbol-function fn))
+      (fset original-function (symbol-function fn))
       (fset fn
 	    (list
 	     'lambda '(&rest arguments)
