@@ -209,8 +209,7 @@ OLD is the previous window.  NEW is the newly selected window."
      (w32-ime-show-mode-line
       (when (or
              (not w32-ime-buffer-switch-p)
-             (and w32-ime-buffer-switch-p
-                  (not (window-minibuffer-p (selected-window)))))
+             (not (window-minibuffer-p (selected-window))))
         (setq w32-ime-mode-line-state-indicator
               (nth (if (ime-get-mode) 1 2)
                    w32-ime-mode-line-state-indicator-list))))
