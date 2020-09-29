@@ -18,6 +18,7 @@
 ;;                   rzl24ozi
 ;;                   TANE
 ;;                   Masamichi Hosoda <trueroad@trueroad.jp>
+;;                   Naoya Yamashita <conao3@gmail.com>
 ;; Maintainer:       Masamichi Hosoda <trueroad@trueroad.jp>
 ;; URL:              https://github.com/trueroad/w32-ime.el
 ;; Version:          20200929
