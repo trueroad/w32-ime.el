@@ -1,3 +1,5 @@
+[日本語 / [English](./README.en.md) ]
+
 # w32-ime.el の歴史
 
 ## はじめに
