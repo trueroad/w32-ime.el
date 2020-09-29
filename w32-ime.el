@@ -8,6 +8,7 @@
 ;; Copyright (C) 2014      rzl24ozi
 ;; Copyright (C) 2015-2020 TANE
 ;; Copyright (C) 2020      Masamichi Hosoda
+;; Copyright (C) 2020      Naoya Yamashita
 
 ;; Author:           H.Miyashita
 ;;                   MIYOSHI Masanori
