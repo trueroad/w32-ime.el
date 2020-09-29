@@ -149,15 +149,15 @@ If SUFFIX is nil, \"-original\" is added."
 (defun w32-ime-toroku-region (begin end)
   "Register words between BEGIN and END to the IME dictionary."
   (interactive "r")
-  (let ((string (buffer-substring begin end))
+  (let ((str (buffer-substring begin end))
 	(w32-ime-buffer-switch-p nil)
 	(reading w32-ime-toroku-region-yomigana))
     (unless (stringp reading)
       (w32-set-ime-mode 'hiragana)
       (setq reading
 	    (read-multilingual-string
-             (format "Input reading of \"%s\": " string) nil "W32-IME")))
-    (w32-ime-register-word-dialog reading string)))
+             (format "Input reading of \"%s\": " str) nil "W32-IME")))
+    (w32-ime-register-word-dialog reading str)))
 
 ;; for IME management system.
 
