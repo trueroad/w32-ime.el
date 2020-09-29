@@ -167,19 +167,18 @@ If SUFFIX is nil, \"-original\" is added."
 (defun w32-ime-sync-state (window)
   "Sync IME and IM buffer state on WINDOW."
   (if w32-ime-buffer-switch-p
-      (progn
-	(with-current-buffer (window-buffer window)
-	  (let* ((frame (window-frame window))
-		 (ime-state (ime-get-mode)))
-	    (cond
-	     ((and (not ime-state)
-		   (equal current-input-method "W32-IME"))
-	      (ime-force-on nil)
-	      (run-hooks 'w32-ime-on-hook))
-	     ((and ime-state
-		   (not (equal current-input-method "W32-IME")))
-	      (ime-force-off nil)
-	      (run-hooks 'w32-ime-off-hook))))))
+      (with-current-buffer (window-buffer window)
+	(let* ((frame (window-frame window))
+	       (ime-state (ime-get-mode)))
+	  (cond
+	   ((and (not ime-state)
+		 (equal current-input-method "W32-IME"))
+	    (ime-force-on nil)
+	    (run-hooks 'w32-ime-on-hook))
+	   ((and ime-state
+		 (not (equal current-input-method "W32-IME")))
+	    (ime-force-off nil)
+	    (run-hooks 'w32-ime-off-hook)))))
     (let ((ime-state (ime-get-mode)))
       (dolist (frame (frame-list))
 	(dolist (win (window-list frame))
