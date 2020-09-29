@@ -106,6 +106,19 @@ w32-ime.el と併用してより高度な処理を行うために作られた sm
 公開者名に追加でサフィックスを振ったりしているものもあります。
 収集先・収集方法などはタグやコミットのメッセージに記載しています。
 
+### H.Miyashita 氏
+
+w32-ime.el にお名前が残り続けている方で、
+Windows 用の Emacs 実装の一つである Meadow の開発メンバの一人です。
+元々 Meadow に同梱されていた meadow.el が w32-ime.el の前々身です。
+現在でも Ring サーバなどから Meadow のリリース版のソースを
+入手することはできるので、リリース時の meadow.el を見ることはできますが、
+SVN リポジトリは失われているので、変化を追うことはできません。
+[Meadow-1.15 ソース
+](http://www.ring.gr.jp/archives/pc/meadow/1.15/Meadow-1.15-1-src.tar.gz)
+にあった ChangeLog.Meadow によると
+1999 年頃に書かれたようです。
+
 ### 三好雅則氏
 
 三好氏は Windows 用の Emacs 実装の一つである Meadow の開発メンバの一人です。

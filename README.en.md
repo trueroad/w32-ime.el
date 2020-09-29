@@ -25,7 +25,16 @@ To use w32-ime.el, add the following code to your init.el or .emacs
 
 ## History
 
-### Miyoshi
+### H.Miyashita
+
+He wrote `meadow.el`, the predecessor to `w32-ime.el`.
+
+According to `ChangeLog.Meadow` in
+[Meadow-1.15 source
+](http://www.ring.gr.jp/archives/pc/meadow/1.15/Meadow-1.15-1-src.tar.gz)
+, it's around 1999.
+
+### MIYOSHI Masanori
 
 * [20011023_Miyoshi](https://github.com/trueroad/w32-ime.el/tree/20011023_Miyoshi) for Emacs 21.1
 * [20020307_Miyoshi](https://github.com/trueroad/w32-ime.el/tree/20020307_Miyoshi) for Emacs 21.2.50
