@@ -165,8 +165,8 @@ If SUFFIX is nil, \"-original\" is added."
   "Sync IME and IM buffer state on WINDOW."
   (if w32-ime-buffer-switch-p
       (with-current-buffer (window-buffer window)
-        (let* ((frame (window-frame window))
-               (ime-state (ime-get-mode)))
+        (let ((frame (window-frame window))
+              (ime-state (ime-get-mode)))
           (cond
            ((and (not ime-state)
                  (equal current-input-method "W32-IME"))
