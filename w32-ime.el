@@ -116,7 +116,7 @@ Even if IME state is not changed, these functiona are maybe called.")
   #'w32-ime-wrap-function-to-control-ime "2020")
 
 (defun w32-ime-wrap-function-to-control-ime
-  (fn &optional interactive-p interactive-arg suffix)
+    (fn &optional interactive-p interactive-arg suffix)
   "Wrap FN, and IME control is enabled when FUNCTION is called.
 If INTERACTIVE-P is non-nil, FUNCTION is handled as interactive and uses
 INTERACTIVE-ARG as its arguments.
@@ -156,7 +156,7 @@ If SUFFIX is nil, \"-original\" is added."
       (w32-set-ime-mode 'hiragana)
       (setq reading
 	    (read-multilingual-string
-            (format "Input reading of \"%s\": " string) nil "W32-IME")))
+             (format "Input reading of \"%s\": " string) nil "W32-IME")))
     (w32-ime-register-word-dialog reading string)))
 
 ;; for IME management system.
@@ -239,16 +239,16 @@ OLD is the previous window.  NEW is the newly selected window."
 ;;;###autoload
 (defun w32-ime-initialize ()
   "Initialize w32-ime.el."
-   (when (and (or (eq system-type 'windows-nt) (eq system-type 'cygwin))
-	      (eq window-system 'w32)
-	      (fboundp 'ime-get-mode))
-     (w32-ime-init-mode-line-display)
-     (w32-ime-mode-line-update)
-     (add-hook 'select-window-functions
-	       'w32-ime-select-window-hook)
-     (add-hook 'set-selected-window-buffer-functions
-	       'w32-ime-set-selected-window-buffer-hook)
-     (define-key global-map [kanji] 'toggle-input-method)))
+  (when (and (or (eq system-type 'windows-nt) (eq system-type 'cygwin))
+	     (eq window-system 'w32)
+	     (fboundp 'ime-get-mode))
+    (w32-ime-init-mode-line-display)
+    (w32-ime-mode-line-update)
+    (add-hook 'select-window-functions
+	      'w32-ime-select-window-hook)
+    (add-hook 'set-selected-window-buffer-functions
+	      'w32-ime-set-selected-window-buffer-hook)
+    (define-key global-map [kanji] 'toggle-input-method)))
 
 (defun w32-ime-uninitialize ()
   "Uninitialize w32-ime.el."
