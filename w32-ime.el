@@ -116,20 +116,20 @@ Even if IME state is not changed, these functiona are maybe called.")
   #'w32-ime-wrap-function-to-control-ime "2020")
 
 (defun w32-ime-wrap-function-to-control-ime
-  (function interactive-p interactive-arg &optional suffix)
-  "Wrap FUNCTION, and IME control is enabled when FUNCTION is called.
+  (fn interactive-p interactive-arg &optional suffix)
+  "Wrap FN, and IME control is enabled when FUNCTION is called.
 If INTERACTIVE-P is non-nil, FUNCTION is handled as interactive and uses
 INTERACTIVE-ARG as its arguments.
 An original function is saved to FUNCTION-SUFFIX when suffix is string.
 If SUFFIX is nil, \"-original\" is added."
   (let ((original-function
-	 (intern (concat (symbol-name function)
+	 (intern (concat (symbol-name fn)
 			 (if suffix suffix "-original")))))
     (cond
      ((not (fboundp original-function))
       (fset original-function
-	    (symbol-function function))
-      (fset function
+	    (symbol-function fn))
+      (fset fn
 	    (list
 	     'lambda '(&rest arguments)
 	     (when interactive-p
