@@ -253,8 +253,7 @@ OLD is the previous window.  NEW is the newly selected window."
   (when (and (or (eq system-type 'windows-nt) (eq system-type 'cygwin))
              (eq window-system 'w32)
              (fboundp 'ime-get-mode))
-    (setq-default mode-line-format
-                  w32-ime-mode-line-format-original)
+    (setq-default mode-line-format w32-ime-mode-line-format-original)
     (force-mode-line-update t)
     (remove-hook 'select-window-functions
                  'w32-ime-select-window-hook)
