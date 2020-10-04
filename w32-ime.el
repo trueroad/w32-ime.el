@@ -243,9 +243,9 @@ OLD is the previous window.  NEW is the newly selected window."
     (w32-ime-init-mode-line-display)
     (w32-ime-mode-line-update)
     (add-hook 'select-window-functions
-              'w32-ime-select-window-hook)
+              #'w32-ime-select-window-hook)
     (add-hook 'set-selected-window-buffer-functions
-              'w32-ime-set-selected-window-buffer-hook)
+              #'w32-ime-set-selected-window-buffer-hook)
     (define-key global-map [kanji] 'toggle-input-method)))
 
 (defun w32-ime-uninitialize ()
@@ -256,9 +256,9 @@ OLD is the previous window.  NEW is the newly selected window."
     (setq-default mode-line-format w32-ime-mode-line-format-original)
     (force-mode-line-update t)
     (remove-hook 'select-window-functions
-                 'w32-ime-select-window-hook)
+                 #'w32-ime-select-window-hook)
     (remove-hook 'set-selected-window-buffer-functions
-                 'w32-ime-set-selected-window-buffer-hook)
+                 #'w32-ime-set-selected-window-buffer-hook)
     (define-key global-map [kanji] 'ignore)))
 
 (defun w32-ime-exit-from-minibuffer ()
@@ -266,7 +266,7 @@ OLD is the previous window.  NEW is the newly selected window."
   (when w32-ime-buffer-switch-p
     (deactivate-input-method))
   (when (<= (minibuffer-depth) 1)
-    (remove-hook 'minibuffer-exit-hook 'w32-ime-exit-from-minibuffer)))
+    (remove-hook 'minibuffer-exit-hook #'w32-ime-exit-from-minibuffer)))
 
 (defun w32-ime-state-switch (&optional arg)
   "Switch IME state.
@@ -280,7 +280,7 @@ Otherwise, turn off the IME state."
         (run-hooks 'w32-ime-on-hook)
         (setq describe-current-input-method-function nil)
         (when (eq (selected-window) (minibuffer-window))
-          (add-hook 'minibuffer-exit-hook 'w32-ime-exit-from-minibuffer))
+          (add-hook 'minibuffer-exit-hook #'w32-ime-exit-from-minibuffer))
         (ime-force-on)
         (setq current-input-method-title w32-ime-input-method-title))
     (setq current-input-method nil)
