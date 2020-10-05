@@ -21,8 +21,8 @@
 ;;                   Naoya Yamashita <conao3@gmail.com>
 ;; Maintainer:       Masamichi Hosoda <trueroad@trueroad.jp>
 ;; URL:              https://github.com/trueroad/w32-ime.el
-;; Version:          20200929
-;; Package-Requires: ((emacs "24.3"))
+;; Version:          20201005
+;; Package-Requires: ((emacs "24.4"))
 
 ;; w32-ime.el is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -114,36 +114,28 @@ Even if IME state is not changed, these functiona are maybe called.")
 (global-set-key [kanji] 'ignore)
 (global-set-key [compend] 'ignore)
 
+(defun w32-ime-wrap-advice-around-control-ime (orig-func &rest args)
+  "IME control around calling ORIG-FUNC with ARGS."
+  (if (and (ime-get-mode)
+           (equal current-input-method "W32-IME"))
+      (progn
+        (ime-force-off)
+        (unwind-protect
+            (apply orig-func args)
+          (when (and (not (ime-get-mode))
+                     (equal current-input-method "W32-IME"))
+            (ime-force-on))))
+    (apply orig-func args)))
+
 (define-obsolete-function-alias 'wrap-function-to-control-ime
   #'w32-ime-wrap-function-to-control-ime "2020")
 
 (defun w32-ime-wrap-function-to-control-ime
-    (fn &optional interactive-p interactive-arg suffix)
-  "Wrap FN, and IME control is enabled when FUNCTION is called.
-If INTERACTIVE-P is non-nil, FUNCTION is handled as interactive and uses
-INTERACTIVE-ARG as its arguments.
-An original function is saved to FUNCTION-SUFFIX when suffix is string.
-If SUFFIX is nil, \"-original\" is added."
-  (let ((original-function
-         (intern (concat (symbol-name fn) (or suffix "-original")))))
-    (unless (fboundp original-function)
-      (fset original-function (symbol-function fn))
-      (fset fn
-            (list
-             'lambda '(&rest arguments)
-             (when interactive-p
-               (list 'interactive interactive-arg))
-             `(cond
-               ((and (ime-get-mode)
-                     (equal current-input-method "W32-IME"))
-                (ime-force-off)
-                (unwind-protect
-                    (apply ',original-function arguments)
-                  (when (and (not (ime-get-mode))
-                             (equal current-input-method "W32-IME"))
-                    (ime-force-on))))
-               (t
-                (apply ',original-function arguments))))))))
+    (fn &optional _interactive-p _interactive-arg _suffix)
+  "Wrap function FN, and IME control is enabled when FN is called.
+_INTERACTIVE-P, _INTERACTIVE-ARG, and _SUFFIX are dummy options for
+backward compatibility and no effect on any specification."
+  (advice-add fn :around #'w32-ime-wrap-advice-around-control-ime))
 
 (defvar w32-ime-toroku-region-yomigana nil
   "If this variable is string, toroku-region regard this value as yomigana.")
@@ -309,5 +301,9 @@ Otherwise, turn off the IME state."
 ;;
 
 (provide 'w32-ime)
+
+;; Local Variables:
+;; indent-tabs-mode: nil
+;; End:
 
 ;;; w32-ime.el ends here
