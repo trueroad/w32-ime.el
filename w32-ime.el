@@ -116,14 +116,16 @@ Even if IME state is not changed, these functiona are maybe called.")
 
 (defun w32-ime-wrap-advice-around-control-ime (orig-func &rest args)
   "IME control around calling ORIG-FUNC with ARGS."
-  (when (and (ime-get-mode)
-             (equal current-input-method "W32-IME"))
-    (ime-force-off))
-  (unwind-protect
-      (apply orig-func args)
-    (when (and (not (ime-get-mode))
-               (equal current-input-method "W32-IME"))
-      (ime-force-on))))
+  (if (and (ime-get-mode)
+           (equal current-input-method "W32-IME"))
+      (progn
+        (ime-force-off)
+        (unwind-protect
+            (apply orig-func args)
+          (when (and (not (ime-get-mode))
+                     (equal current-input-method "W32-IME"))
+            (ime-force-on))))
+    (apply orig-func args)))
 
 (define-obsolete-function-alias 'wrap-function-to-control-ime
   #'w32-ime-wrap-function-to-control-ime "2020")
