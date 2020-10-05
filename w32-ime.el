@@ -300,4 +300,8 @@ Otherwise, turn off the IME state."
 
 (provide 'w32-ime)
 
+;; Local Variables:
+;; indent-tabs-mode: nil
+;; End:
+
 ;;; w32-ime.el ends here
