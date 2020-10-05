@@ -119,7 +119,7 @@ Even if IME state is not changed, these functiona are maybe called.")
   (when (and (ime-get-mode)
              (equal current-input-method "W32-IME"))
     (ime-force-off))
-  (prog1
+  (unwind-protect
       (apply orig-func args)
     (when (and (not (ime-get-mode))
                (equal current-input-method "W32-IME"))
