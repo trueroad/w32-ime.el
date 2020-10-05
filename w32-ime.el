@@ -119,11 +119,11 @@ Even if IME state is not changed, these functiona are maybe called.")
   (when (and (ime-get-mode)
              (equal current-input-method "W32-IME"))
     (ime-force-off))
-  (let ((retval (apply orig-func args)))
+  (prog1
+      (apply orig-func args)
     (when (and (not (ime-get-mode))
                (equal current-input-method "W32-IME"))
-      (ime-force-on))
-    retval))
+      (ime-force-on))))
 
 (define-obsolete-function-alias 'wrap-function-to-control-ime
   #'w32-ime-wrap-function-to-control-ime "2020")
