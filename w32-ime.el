@@ -117,7 +117,7 @@ Even if IME state is not changed, these functiona are maybe called.")
 (defun w32-ime-wrap-advice-around-control-ime (orig-func &rest args)
   "IME control around calling ORIG-FUNC with ARGS."
   (when (and (ime-get-mode)
-	     (equal current-input-method "W32-IME"))
+             (equal current-input-method "W32-IME"))
     (ime-force-off))
   (let ((retval (apply orig-func args)))
     (when (and (not (ime-get-mode))
