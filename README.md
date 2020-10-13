@@ -1,14 +1,53 @@
+[![MELPA](https://melpa.org/packages/w32-ime-badge.svg)](https://melpa.org/#/w32-ime)
+
 [日本語 / [English](./README.en.md) ]
 
-# w32-ime.el の歴史
+# w32-ime.el --- Windows IME UI/UX controler
 
-## はじめに
+[w32-ime.el](https://github.com/trueroad/w32-ime.el) は、
+[GNU Emacs](https://www.gnu.org/software/emacs/)
+を Windows で使う際、
+日本語入力に Windows の IME を使うことができるようにする
+IME パッチの一部でした。
+Emacs 26.2 以降、IME パッチ無しでも Windows の IME を使って
+日本語入力することができるようになりました。
+しかし、 IME パッチのうちいくつかの機能が現在も Emacs
+には実装されていません。
+そのため IME パッチ無しでは日本語入力はできるものの
+不便になってしまっています。
 
-[本リポジトリ](https://github.com/trueroad/w32-ime.el) は、
+w32-ime.el は IME パッチの上位レイヤを扱い、
+便利な機能を提供していますが、現在の Emacs には含まれていません。
+w32-ime.el には、
+モードラインに IME の ON/OFF 状態を表示する機能をはじめとする、
+UI/UX 関連機能があります。
+また、IME 状態の変更によって呼ばれるフックの機能などがあります。
+こうしたフックによって IME ON/OFF によってカーソルの色や形を変更し、
+視覚的に IME 状態をわかりやすくすることができます。
+
+w32-ime.el を使うには、
+IME パッチが適用された emacs.exe を使うか、
+IME パッチ無しの emacs.exe の場合は
+[モジュール](https://github.com/trueroad/tr-emacs-ime-module)
+が必要となります。
+以下のコードを init.el または .emacs に追加してください。
+
+```el
+(setq default-input-method "W32-IME")
+(w32-ime-initialize)
+```
+
+## 本リポジトリ
+
+[本リポジトリ](https://github.com/trueroad/w32-ime.el) は、もともと
 [GNU Emacs](https://www.gnu.org/software/emacs/)
 を Windows で使う際に、日本語入力用の IME を使うことができるようにする
 IME パッチの一部である、 w32-ime.el および関連ファイルについて収集し、
-その開発の流れを追えるようにしたものです。
+その開発の流れを追えるようにしたものでした。
+
+現在は w32-ime.el を MELPA に収録していただいたので、
+その w32-ime.el サイトを主目的とし、
+あわせて開発の流れを追えるようにしています。
 
 ## w32-ime.el とは
 
@@ -298,6 +337,46 @@ C 実装部分も w32-ime.el も、独自に手を入れている部分があり
   IME ON のまま C-s (isearch-forward) すると、
   未変換文字の確定時に IME OFF になってしまう事象を
   [修正](https://github.com/trueroad/w32-ime.el/tree/20200829_Hosoda)
+
+### MELPA 登録
+
+2020 年 10 月に
+[MELPA へ登録されました](https://melpa.org/#/w32-ime)。
+
+登録にあたって、
+[
+コーディング規約に従うための修正
+](https://github.com/trueroad/w32-ime.el/commit/4265355ad0ac07c8723a0db8276b5c9340c6f2b0)
+を行いました。
+そのため、関数名・変数名を一部変更したものがあります。
+
+* 関数名
+    * 変更前: `wrap-function-to-control-ime`
+    * 変更後: `w32-ime-wrap-function-to-control-ime`
+* 変数名
+    * 変更前: `w32-last-selection`
+    * 変更後: `w32-ime-last-selection`
+
+どちらも変更前の名前をエイリアスにしているため、
+従来の名前でも使用することができます。
+
+また、
+[w32-ime-wrap-function-to-control-ime
+関数の書き換え](https://github.com/trueroad/w32-ime.el/pull/2)
+を実施しました。
+これにより、従来の `wrap-function-to-control-ime` 関数とは
+実装方法が変更になっていますが、後方互換性を確保するように考慮しており、
+通常の使い方をしていた場合は同様の動作になるようにしています。
+具体的には第 2, 3, 4 引数がダミーになっており、
+第 1 引数以外には何を指定しても効果が無いようになりました。
+なお、以前の実装に依存した使い方をしていた場合には、
+動作しなくなる可能性があります。
+（例：ラップ前後でインタラクティブ性やインタラクティブ引数を変更する、
+ラップ前のオリジナル関数を直接呼ぶ、など。）
+
+また、
+[リファクタリング](https://github.com/trueroad/w32-ime.el/pull/1)
+も実施しました。
 
 ## ライセンス
 

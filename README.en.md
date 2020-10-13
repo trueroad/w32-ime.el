@@ -1,3 +1,7 @@
+[![MELPA](https://melpa.org/packages/w32-ime-badge.svg)](https://melpa.org/#/w32-ime)
+
+[ [Japanese](./README.md) / English ]
+
 # w32-ime.el --- Windows IME UI/UX controler
 
 w32-ime.el, formerly known as "Meadow features for NTEmacs", was part of
@@ -96,6 +100,20 @@ According to `ChangeLog.Meadow` in
 * [Fix](https://github.com/trueroad/w32-ime.el/tree/20200824_Hosoda)
 * [Fix](https://github.com/trueroad/w32-ime.el/tree/20200826_Hosoda)
 * [Fix](https://github.com/trueroad/w32-ime.el/tree/20200829_Hosoda)
+
+### MELPA
+
+w32-ime.el is
+[added to MELPA](https://melpa.org/#/w32-ime) on Oct. 2020.
+We have made various modifications to that.
+
+* [Modifications to comply with coding conventions.
+](https://github.com/trueroad/w32-ime.el/commit/4265355ad0ac07c8723a0db8276b5c9340c6f2b0)
+* [Rewrite w32-ime-wrap-function-to-control-ime using advice-add
+](https://github.com/trueroad/w32-ime.el/pull/2)
+* [Refactoring
+](https://github.com/trueroad/w32-ime.el/pull/1)
+* etc.
 
 ## License
 
