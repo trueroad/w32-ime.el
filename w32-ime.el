@@ -21,7 +21,7 @@
 ;;                   Naoya Yamashita <conao3@gmail.com>
 ;; Maintainer:       Masamichi Hosoda <trueroad@trueroad.jp>
 ;; URL:              https://github.com/trueroad/w32-ime.el
-;; Version:          20201005
+;; Version:          0.0.1
 ;; Package-Requires: ((emacs "24.4"))
 
 ;; w32-ime.el is free software: you can redistribute it and/or modify
