@@ -75,22 +75,33 @@
 
 ;; ----------
 
+(defcustom w32-ime-buffer-switch-p t
+  "If this variable is nil, IME control when buffer is switched is disabled."
+  :type '(choice (const :tag "Enable" t)
+                 (const :tag "Disable" nil))
+  :group 'W32-IME)
+(defcustom w32-ime-show-mode-line t
+  "When t, mode line indicates IME state."
+  :type '(choice (const :tag "Enable" t)
+                 (const :tag "Disable" nil))
+  :group 'W32-IME)
+(defcustom w32-ime-mode-line-state-indicator "[O]"
+  "This is shown at the mode line.  It is regarded as state of ime."
+  :type '(string)
+  :group 'W32-IME)
+(make-variable-buffer-local 'w32-ime-mode-line-state-indicator)
+(put 'w32-ime-mode-line-state-indicator 'permanent-local t)
+(defcustom w32-ime-mode-line-state-indicator-list '("-" "[|]" "[O]")
+  "List of IME state indicator string."
+  :type '(list string string string)
+  :group 'W32-IME)
+
 (defvar w32-ime-on-hook nil
   "Functions to eval when IME is turned on at least.
 Even if IME state is not changed, these functiona are maybe called.")
 (defvar w32-ime-off-hook nil
   "Functions to eval when IME is turned off at least.
 Even if IME state is not changed, these functiona are maybe called.")
-(defvar w32-ime-buffer-switch-p t
-  "If this variable is nil, IME control when buffer is switched is disabled.")
-(defvar w32-ime-show-mode-line t
-  "When t, mode line indicates IME state.")
-(defvar w32-ime-mode-line-state-indicator "[O]"
-  "This is shown at the mode line.  It is regarded as state of ime.")
-(make-variable-buffer-local 'w32-ime-mode-line-state-indicator)
-(put 'w32-ime-mode-line-state-indicator 'permanent-local t)
-(defvar w32-ime-mode-line-state-indicator-list '("-" "[|]" "[O]")
-  "List of IME state indicator string.")
 (defvar w32-ime-mode-line-format-original nil
   "Original mode line format.")
 (defvar w32-ime-input-method-title nil
