@@ -279,7 +279,6 @@ Otherwise, turn on the IME state."
       (progn
         (setq deactivate-current-input-method-function
               'w32-ime-state-switch)
-        (run-hooks 'input-method-activate-hook)
         (run-hooks 'w32-ime-on-hook)
         (setq describe-current-input-method-function nil)
         (when (eq (selected-window) (minibuffer-window))
@@ -287,7 +286,6 @@ Otherwise, turn on the IME state."
         (ime-force-on)
         (setq current-input-method-title w32-ime-input-method-title))
     (setq current-input-method nil)
-    (run-hooks 'input-method-deactivate-hook)
     (run-hooks 'w32-ime-off-hook)
     (setq describe-current-input-method-function nil)
     (ime-force-off)
