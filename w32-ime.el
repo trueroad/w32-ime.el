@@ -274,7 +274,7 @@ OLD is the previous window.  NEW is the newly selected window."
 (defun w32-ime-state-switch (&optional arg)
   "Switch IME state.
 If ARG is omitted or nil, turn off the IME state.
-Otherwise, turn off the IME state."
+Otherwise, turn on the IME state."
   (if arg
       (progn
         (setq deactivate-current-input-method-function
